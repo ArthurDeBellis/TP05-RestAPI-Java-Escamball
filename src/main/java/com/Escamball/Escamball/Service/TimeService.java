@@ -1,8 +1,9 @@
 package com.Escamball.Escamball.Service;
 
 import com.Escamball.Escamball.Entity.TimeEntity;
-import com.Escamball.Escamball.LightModel.TimeLightModel;
 import com.Escamball.Escamball.Repository.TimeRepository;
+import com.Escamball.Escamball.TimesPadrao.TimePadrao;
+import net.bytebuddy.implementation.bind.annotation.Default;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,11 @@ public class TimeService {
 
     @Autowired
     private TimeRepository timeRepository;
-
     @Transactional
     public String createTime(TimeEntity time){
         try{
             if(!timeRepository.existsByLogin(time.getLogin())){
-                time.setTimeId(null == timeRepository.findMaxId()?1 : timeRepository.findMaxId() + 1);
+                time.setTimeId(timeRepository.findMaxId()==null?1 : timeRepository.findMaxId() + 1);
                 timeRepository.save(time);
                 return "Time registrado";
             }else{
@@ -38,8 +38,18 @@ public class TimeService {
         return timeRepository.findById(id).isPresent()? timeRepository.findById(id).get() : new TimeEntity();
     }
 
+    public TimeEntity confereLogin(String login, String senha){
+        TimeEntity time = timeRepository.findByLogin(login);
+        if(time !=null){
+            if(time.getSenha().equals(senha)){
+                return time;
+            }
+        }
+        return null;
+    }
+
     @Transactional
-    public String updateTime(int timeId, TimeLightModel time){
+    public String updateTime(int timeId, TimeEntity time){
         if (timeRepository.existsById(timeId)){
             try {
                 TimeEntity timeSelecionado = findTimeById(timeId);

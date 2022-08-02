@@ -1,8 +1,7 @@
 package com.Escamball.Escamball.Entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Times")
@@ -13,7 +12,8 @@ public class TimeEntity {
     private String nomeTime;
     private String login;
     private String senha;
-    //private List<JogadorModel> Elenco;
+    @OneToMany
+    private List<JogadorEntity> jogadores;
 
     public TimeEntity () { }
 
