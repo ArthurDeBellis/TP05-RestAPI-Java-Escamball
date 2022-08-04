@@ -4,11 +4,11 @@ import com.Escamball.Escamball.Entity.JogadorEntity;
 import com.Escamball.Escamball.Entity.TimeEntity;
 import com.Escamball.Escamball.Models.JogadorModel;
 import com.Escamball.Escamball.Repository.JogadorRepository;
-import com.Escamball.Escamball.Repository.TimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +37,29 @@ public class JogadorService {
         Optional<JogadorEntity> j = jogadorRepository.findById(jogadorId);
         return j.orElse(null);
     }
+    public List<JogadorEntity> findJogadoresByNome(String nomeJogador)
+    {
+        List<JogadorEntity> retorno = new ArrayList<>();
+        List<JogadorEntity> jogadores = jogadorRepository.findAll();
+        for(JogadorEntity j:jogadores ) {
+            if(j.getNomeJogador().toLowerCase().contains(nomeJogador.toLowerCase())){
+                retorno.add(j);
+            }
+        }
+        return retorno;
+    }
+
+    public List<JogadorEntity> findElenco(int idTime){
+        List<JogadorEntity> retorno = new ArrayList<>();
+        List<JogadorEntity> jogadores = jogadorRepository.findAll();
+        for(JogadorEntity j:jogadores ) {
+            if(j.getTime().getTimeId() == idTime){
+                retorno.add(j);
+            }
+        }
+        return retorno;
+    }
+
     @Transactional
     public String updateJogador(int jogadorId, JogadorEntity jogador){
         if(jogadorRepository.existsById(jogadorId)){
