@@ -6,6 +6,14 @@ public class JogadorModel {
     private long precoJogador;
     private int timeId;
 
+    //Pontuacao
+    private int ataque;
+    private int defesa;
+    private int fisico;
+
+    //Posicao
+    private String posicao;
+
     public String getNomeJogador() {
         return nomeJogador;
     }
@@ -36,5 +44,37 @@ public class JogadorModel {
 
     public void setTimeId(int timeId) {
         this.timeId = timeId;
+    }
+
+    public int getAtaque() {
+        return ataque;
+    }
+
+    public void setAtaque(int ataque) {
+        this.ataque = ataque;
+    }
+
+    public int getDefesa() {
+        return defesa;
+    }
+
+    public void setDefesa(int defesa) {
+        this.defesa = defesa;
+    }
+
+    public int getFisico() {
+        return fisico;
+    }
+
+    public void setFisico(int fisico) {
+        this.fisico = fisico;
+    }
+
+    public String getPosicao() {
+        return posicao;
+    }
+
+    public void setPosicao(String posicao) {
+        this.posicao = posicao;
     }
 }

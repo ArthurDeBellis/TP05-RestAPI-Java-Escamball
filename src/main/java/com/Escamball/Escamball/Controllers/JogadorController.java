@@ -31,6 +31,12 @@ public class JogadorController {
         return jogadorService.findJogadoresByNome(nomeJogador);
     }
 
+    @GetMapping("JogadoresPorPosicao/{posicao}")
+    public List<JogadorEntity> jogadorPorPosicao(@PathVariable(value = "posicao") String posicao)
+    {
+        return jogadorService.findJogadoresByPosicao(posicao);
+    }
+
     @GetMapping("JogadoresPorIdTime/{timeId}")
     public List<JogadorEntity> jogadoresPorIdTime(@PathVariable(value = "timeId") int timeId )
     {

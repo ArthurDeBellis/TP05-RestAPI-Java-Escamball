@@ -23,6 +23,15 @@ public class JogadorService {
         j.setNomeJogador(jogador.getNomeJogador());
         j.setIdadeJogador(jogador.getIdadeJogador());
         j.setPrecoJogador(jogador.getPrecoJogador());
+
+        j.setAtaque(jogador.getAtaque());
+        j.setDefesa(jogador.getDefesa());
+        j.setFisico(jogador.getFisico());
+
+        j.setGeral();
+
+        j.setPosicao(jogador.getPosicao().toUpperCase());
+
         TimeEntity refTime = new TimeEntity();
         refTime.setTimeId(jogador.getTimeId());
         j.setTime(refTime);
@@ -47,6 +56,11 @@ public class JogadorService {
             }
         }
         return retorno;
+    }
+
+    public List<JogadorEntity> findJogadoresByPosicao(String posicao)
+    {
+        return jogadorRepository.findAllByPosicao(posicao);
     }
 
     public List<JogadorEntity> findElenco(int idTime){

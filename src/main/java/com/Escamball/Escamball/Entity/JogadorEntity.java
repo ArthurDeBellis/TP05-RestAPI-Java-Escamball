@@ -10,14 +10,17 @@ public class JogadorEntity {
     private String nomeJogador;
     private int idadeJogador;
     private long precoJogador;
+
+    //Pontuacao
+    private int ataque;
+    private int defesa;
+    private int fisico;
+    private int geral;
+
+    //Posicao
+    private String posicao;
     @ManyToOne
     private TimeEntity time;
-
-    /*
-    * Posicao
-    * Pontuacao
-    * */
-
     public JogadorEntity() {
     }
 
@@ -59,5 +62,45 @@ public class JogadorEntity {
 
     public void setTime(TimeEntity time) {
         this.time = time;
+    }
+
+    public int getAtaque() {
+        return ataque;
+    }
+
+    public void setAtaque(int ataque) {
+        this.ataque = ataque;
+    }
+
+    public int getDefesa() {
+        return defesa;
+    }
+
+    public void setDefesa(int defesa) {
+        this.defesa = defesa;
+    }
+
+    public int getFisico() {
+        return fisico;
+    }
+
+    public void setFisico(int fisico) {
+        this.fisico = fisico;
+    }
+
+    public int getGeral() {
+        return geral;
+    }
+
+    public void setGeral() {
+        this.geral = (ataque+defesa+fisico)/3;
+    }
+
+    public String getPosicao() {
+        return posicao;
+    }
+
+    public void setPosicao(String posicao) {
+        this.posicao = posicao;
     }
 }

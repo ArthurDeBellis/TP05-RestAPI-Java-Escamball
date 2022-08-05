@@ -11,4 +11,6 @@ import java.util.List;
 public interface JogadorRepository extends JpaRepository<JogadorEntity, Integer> {
     @Query("select max(j.jogadorId) from JogadorEntity j")
     Integer findMaxId();
+
+    List<JogadorEntity> findAllByPosicao(String posicao);
 }
