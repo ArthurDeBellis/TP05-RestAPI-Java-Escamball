@@ -4,6 +4,7 @@ import com.Escamball.Escamball.Entity.TimeEntity;
 import com.Escamball.Escamball.Models.LoginModel;
 import com.Escamball.Escamball.Service.TimeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class TimeController {
     }
 
     @PostMapping("/InsereTime")
-    public String novoTime(@RequestBody TimeEntity timeEntity)
+    public ResponseEntity<TimeEntity> novoTime(@RequestBody TimeEntity timeEntity)
     {
         return timeService.createTime(timeEntity);
     }

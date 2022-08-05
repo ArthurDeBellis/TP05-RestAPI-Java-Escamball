@@ -1,8 +1,11 @@
 package com.Escamball.Escamball.Service;
 
+import com.Escamball.Escamball.Entity.JogadorEntity;
 import com.Escamball.Escamball.Entity.TransacoesEntity;
 import com.Escamball.Escamball.Repository.TransacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,27 +22,31 @@ public class TransacaoService {
     private JogadorService jogadorService;
 
     @Transactional
-    public String createTransacao(TransacoesEntity transacoes)
+    public ResponseEntity<TransacoesEntity> createTransacao(TransacoesEntity transacoes)
     {
-        try
-        {
-            if(!transacaoRepository.existsByJogadorOferecidoId(transacoes.getJogadorOferecidoId())
-            && !transacaoRepository.existsByJogadorDesejadoId(transacoes.getJogadorDesejadoId()))
-            {
-                transacoes.setTransacaoId(transacaoRepository.findMaxId()==null?1 : transacaoRepository.findMaxId()+1);
-                transacoes.setTransacaoAceita(false);
-                transacoes.setTransacaoFinalizada(false);
-                transacaoRepository.save(transacoes);
-                return "Transacao Registrada";
-            }
-            else{
-                return "Esta transacao já foi registrada";
-            }
+
+        JogadorEntity jogadorOferecido = jogadorService.findJogadorById(transacoes.getJogadorOferecidoId());
+        JogadorEntity jogadorDesejado = jogadorService.findJogadorById(transacoes.getJogadorDesejadoId());
+
+        if(jogadorOferecido == null
+                || jogadorOferecido.getTime() == null
+                || jogadorOferecido.getTime().getTimeId() != transacoes.getTimePropostaId()
+        ){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
+
+        if(jogadorDesejado == null
+                || jogadorDesejado.getTime() == null
+                || jogadorDesejado.getTime().getTimeId() != transacoes.getTimeReceptorId()
+        ){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+
+        transacoes.setTransacaoId(transacaoRepository.findMaxId()==null?1 : transacaoRepository.findMaxId()+1);
+        transacoes.setTransacaoAceita(false);
+        transacoes.setTransacaoFinalizada(false);
+        transacaoRepository.save(transacoes);
+        return new ResponseEntity<>(transacoes, HttpStatus.OK);
     }
 
     public List<TransacoesEntity> findAllTransacoes()
@@ -59,43 +66,44 @@ public class TransacaoService {
     }
 
     @Transactional
-    public String rejeitaTransacao(int id)
+    public ResponseEntity<TransacoesEntity> rejeitaTransacao(int id)
     {
         TransacoesEntity t = findTransacaoById(id);
         if(t==null)
         {
-            return "Transacao não encontrada!";
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         t.setTransacaoId(id);
-        if(t.isTransacaoFinalizada())
+        if(!t.isTransacaoFinalizada())
         {
             t.setTransacaoFinalizada(true);
             t.setTransacaoAceita(false);
             transacaoRepository.save(t);
-            return "Transacao recusada com sucesso!";
+            return new ResponseEntity<>(t, HttpStatus.OK);
+
         }
-        return "A transacao já foi finalizada!";
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
     @Transactional
-    public String aceitaTransacao(int id)
+    public ResponseEntity<TransacoesEntity> aceitaTransacao(int id)
     {
         TransacoesEntity t = findTransacaoById(id);
         if(t==null)
         {
-            return "Transacao não encontrada!";
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         t.setTransacaoId(id);
-        if(t.isTransacaoFinalizada())
+        if(!t.isTransacaoFinalizada())
         {
             t.setTransacaoFinalizada(true);
             t.setTransacaoAceita(true);
             transacaoRepository.save(t);
             jogadorService.transfereTime(t.getJogadorDesejadoId(), t.getTimePropostaId());
             jogadorService.transfereTime(t.getJogadorOferecidoId(),t.getTimeReceptorId());
-            return "Transacao aceita!";
+            return new ResponseEntity<>(t, HttpStatus.OK);
         }
-        return "A transacao já foi finalizada!";
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
 }

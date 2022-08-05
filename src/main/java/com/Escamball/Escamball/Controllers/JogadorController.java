@@ -5,6 +5,7 @@ import com.Escamball.Escamball.Models.JogadorModel;
 import com.Escamball.Escamball.Service.JogadorService;
 import com.Escamball.Escamball.Service.TimeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class JogadorController {
     }
 
     @PostMapping("/InsereJogador")
-    public String novoJogador(@RequestBody JogadorModel jogadorModel){
+    public ResponseEntity<JogadorEntity> novoJogador(@RequestBody JogadorModel jogadorModel){
         return jogadorService.createJogador(jogadorModel);
     }
 }

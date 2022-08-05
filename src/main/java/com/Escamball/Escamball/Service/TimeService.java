@@ -5,6 +5,8 @@ import com.Escamball.Escamball.Repository.TimeRepository;
 import com.Escamball.Escamball.TimesPadrao.TimePadrao;
 import net.bytebuddy.implementation.bind.annotation.Default;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,14 +18,14 @@ public class TimeService {
     @Autowired
     private TimeRepository timeRepository;
     @Transactional
-    public String createTime(TimeEntity time){
+    public ResponseEntity<TimeEntity> createTime(TimeEntity time){
         try{
             if(!timeRepository.existsByLogin(time.getLogin())){
                 time.setTimeId(timeRepository.findMaxId()==null?1 : timeRepository.findMaxId() + 1);
                 timeRepository.save(time);
-                return "Time registrado";
+                return new ResponseEntity<>(time, HttpStatus.OK);
             }else{
-                return "Este login já foi cadastrado!";
+                return new ResponseEntity<>((TimeEntity) null, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

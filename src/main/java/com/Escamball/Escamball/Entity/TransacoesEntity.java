@@ -6,13 +6,10 @@ import javax.persistence.*;
 public class TransacoesEntity {
     @Id
     private int transacaoId;
-
     private int timePropostaId;
     private int timeReceptorId;
-
     private int jogadorOferecidoId;
     private int jogadorDesejadoId;
-
     private boolean transacaoAceita;
     private boolean transacaoFinalizada;
 

@@ -5,6 +5,8 @@ import com.Escamball.Escamball.Entity.TimeEntity;
 import com.Escamball.Escamball.Models.JogadorModel;
 import com.Escamball.Escamball.Repository.JogadorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,7 +19,7 @@ public class JogadorService {
     @Autowired
     private JogadorRepository jogadorRepository;
     @Transactional
-    public String createJogador(JogadorModel jogador) {
+    public ResponseEntity<JogadorEntity> createJogador(JogadorModel jogador) {
         JogadorEntity j = new JogadorEntity();
         j.setJogadorId(jogadorRepository.findMaxId()==null ? 1 : jogadorRepository.findMaxId()+1);
         j.setNomeJogador(jogador.getNomeJogador());
@@ -36,7 +38,7 @@ public class JogadorService {
         refTime.setTimeId(jogador.getTimeId());
         j.setTime(refTime);
         jogadorRepository.save(j);
-        return "Jogador cadastrado";
+        return new ResponseEntity<>(j, HttpStatus.OK);
     }
 
     public List<JogadorEntity> findAllJogadores(){
