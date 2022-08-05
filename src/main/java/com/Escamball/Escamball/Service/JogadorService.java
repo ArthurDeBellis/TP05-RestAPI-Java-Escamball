@@ -100,4 +100,20 @@ public class JogadorService {
             return "Jogador não encontrado";
         }
     }
+
+    @Transactional
+    public String transfereTime(int jogadorId, int timeId)
+    {
+        if(jogadorRepository.existsById(jogadorId))
+        {
+            JogadorEntity j = findJogadorById(jogadorId);
+            j.setJogadorId(jogadorId);
+            TimeEntity refTime = new TimeEntity();
+            refTime.setTimeId(timeId);
+            j.setTime(refTime);
+            jogadorRepository.save(j);
+            return "Transferência feita";
+        }
+        return "Jogador não encontrado";
+    }
 }
